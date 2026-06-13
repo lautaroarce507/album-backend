@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
-import { Cart } from '../cart/cart.entity';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Shop {
@@ -9,9 +8,18 @@ export class Shop {
   @Column()
   name: string;
 
-  @Column()
-  address: string;
+  @Column('float', { default: 0 })
+  price: number;
 
-  @ManyToMany(() => Cart, (cart) => cart.shops)
-  carts: Cart[];
+  @Column({ default: 5 })
+  stickersCount: number;
+
+  @Column({ default: '' })
+  image: string;
+
+  @Column({ default: '' })
+  description: string;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

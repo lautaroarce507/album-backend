@@ -29,6 +29,11 @@ export class UserController {
     return this.userService.update(id, body);
   }
 
+  @Post('login')
+  login(@Body() body: Partial<User>): Promise<User> {
+    return this.userService.login(body.email ?? '', body.password);
+  }
+
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.userService.remove(id);

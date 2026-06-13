@@ -30,8 +30,31 @@ export class UserService {
     return this.findOne(id);
   }
 
+  async login(email: string, password?: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user || user.password !== password) {
+      throw new NotFoundException('Credenciales incorrectas');
+    }
+    return user;
+  }
+
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
+    
+    // Eliminar manualmente relaciones para evitar restricciones de clave foránea activas en la BD
+    try {
+      await this.userRepository.query('DELETE FROM "cart_items_shop" WHERE "cartId" IN (SELECT id FROM "cart" WHERE "userId" = $1)', [id]);
+    } catch (e) {}
+    try {
+      await this.userRepository.query('DELETE FROM "cart" WHERE "userId" = $1', [id]);
+    } catch (e) {}
+    try {
+      await this.userRepository.query('DELETE FROM "figure" WHERE "albumId" IN (SELECT id FROM "album" WHERE "userId" = $1)', [id]);
+    } catch (e) {}
+    try {
+      await this.userRepository.query('DELETE FROM "album" WHERE "userId" = $1', [id]);
+    } catch (e) {}
+
     await this.userRepository.remove(user);
   }
 }

@@ -11,8 +11,8 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "name": "nahuel Seguel",
-  "email": "nahuel@example.com"
+  "name": "lauty Arce",
+  "email": "lauty@example.com"
 }
 
 ### Actualizar un usuario
@@ -20,10 +20,11 @@ PUT http://localhost:3000/users/1
 Content-Type: application/json
 
 {
-  "name": "Juan Actualizado",
-  "email": "juanupdate@example.com"
+  "name": "lauty Arce",
+  "email": "lauty@example.com"
 }
 
 ### Eliminar un usuario
-DELETE http://localhost:3000/users/1
+DELETE http://localhost:3000/users/11
 Content-Type: application/json
+

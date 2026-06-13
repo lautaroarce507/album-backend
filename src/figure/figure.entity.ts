@@ -12,6 +12,6 @@ export class Figure {
   @Column({ default: false })
   obtained: boolean;
 
-  @ManyToOne(() => Album, (album) => album.figures)
+  @ManyToOne(() => Album, (album) => album.figures, { onDelete: 'CASCADE' })
   album: Album;
 }

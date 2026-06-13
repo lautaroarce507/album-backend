@@ -10,7 +10,7 @@ export class Album {
   @Column()
   title: string;
 
-  @ManyToOne(() => User, (user) => user.albums)
+  @ManyToOne(() => User, (user) => user.albums, { onDelete: 'CASCADE' })
   user: User;
 
   @OneToMany(() => Figure, (figure) => figure.album)

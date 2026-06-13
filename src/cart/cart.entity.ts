@@ -1,22 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 import { User } from '../user/user.entity';
-import { Shop } from '../shop/shop.entity';
+import { CartItem } from './cart-item.entity';
 
 @Entity()
 export class Cart {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  brand: string;
-
-  @Column()
-  model: string;
-
-  @ManyToOne(() => User, (user) => user.carts)
+  @ManyToOne(() => User, (user) => user.carts, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToMany(() => Shop, (shop) => shop.carts)
-  @JoinTable()
-  shops: Shop[];
+  @OneToMany(() => CartItem, (cartItem) => cartItem.cart)
+  items: CartItem[];
 }
