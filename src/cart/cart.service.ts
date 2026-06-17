@@ -5,6 +5,7 @@ import { Cart } from './cart.entity';
 import { CartItem } from './cart-item.entity';
 import { User } from '../user/user.entity';
 import { Shop } from '../shop/shop.entity';
+import { AlbumService } from '../album/album.service';
 
 @Injectable()
 export class CartService {
@@ -17,6 +18,7 @@ export class CartService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Shop)
     private readonly shopRepository: Repository<Shop>,
+    private readonly albumService: AlbumService,
   ) {}
 
   async findOrCreateCart(userId: number): Promise<any> {
@@ -77,6 +79,31 @@ export class CartService {
     if (cart) {
       await this.cartItemRepository.delete({ cart: { id: cart.id } });
     }
+    return this.findOrCreateCart(userId);
+  }
+
+  async checkout(userId: number): Promise<any> {
+    const cart = await this.cartRepository.findOne({
+      where: { user: { id: userId } },
+      relations: { items: { product: true } },
+    });
+
+    if (!cart || !cart.items || cart.items.length === 0) {
+      throw new NotFoundException('El carrito está vacío');
+    }
+
+    // Process each product in the cart
+    for (const item of cart.items) {
+      const product = item.product;
+      const isGolden = product.name.toLowerCase().includes('dorada');
+      const stickersCount = product.stickersCount || 1;
+      
+      await this.albumService.unlockRandomFigures(userId, stickersCount, isGolden);
+    }
+
+    // Empty the cart
+    await this.cartItemRepository.delete({ cart: { id: cart.id } });
+
     return this.findOrCreateCart(userId);
   }
 }

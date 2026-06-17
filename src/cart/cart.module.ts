@@ -6,9 +6,13 @@ import { User } from '../user/user.entity';
 import { Shop } from '../shop/shop.entity';
 import { CartService } from './cart.service';
 import { CartController } from './cart.controller';
+import { AlbumModule } from '../album/album.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Cart, CartItem, User, Shop])],
+  imports: [
+    TypeOrmModule.forFeature([Cart, CartItem, User, Shop]),
+    AlbumModule,
+  ],
   controllers: [CartController],
   providers: [CartService],
   exports: [CartService],

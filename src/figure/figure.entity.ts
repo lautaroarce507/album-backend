@@ -12,6 +12,9 @@ export class Figure {
   @Column({ default: false })
   obtained: boolean;
 
+  @Column({ default: false })
+  isGolden: boolean;
+
   @ManyToOne(() => Album, (album) => album.figures, { onDelete: 'CASCADE' })
   album: Album;
 }

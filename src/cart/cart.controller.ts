@@ -22,4 +22,9 @@ export class CartController {
   clearCart(@Param('userId', ParseIntPipe) userId: number): Promise<any> {
     return this.cartService.clearCart(userId);
   }
+
+  @Post('checkout')
+  checkout(@Param('userId', ParseIntPipe) userId: number): Promise<any> {
+    return this.cartService.checkout(userId);
+  }
 }
