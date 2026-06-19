@@ -6,6 +6,7 @@ import { CartItem } from './cart-item.entity';
 import { User } from '../user/user.entity';
 import { Shop } from '../shop/shop.entity';
 import { AlbumService } from '../album/album.service';
+import { EnvelopeService } from '../envelope/envelope.service';
 
 @Injectable()
 export class CartService {
@@ -19,6 +20,7 @@ export class CartService {
     @InjectRepository(Shop)
     private readonly shopRepository: Repository<Shop>,
     private readonly albumService: AlbumService,
+    private readonly envelopeService: EnvelopeService,
   ) {}
 
   async findOrCreateCart(userId: number): Promise<any> {
@@ -92,13 +94,17 @@ export class CartService {
       throw new NotFoundException('El carrito está vacío');
     }
 
-    // Process each product in the cart
+    // Process each product in the cart: store purchased envelopes/cards in Envelope database
     for (const item of cart.items) {
       const product = item.product;
       const isGolden = product.name.toLowerCase().includes('dorada');
-      const stickersCount = product.stickersCount || 1;
-      
-      await this.albumService.unlockRandomFigures(userId, stickersCount, isGolden);
+      if (isGolden) {
+        // Increment user's golden envelopes count
+        await this.envelopeService.addEnvelopes(userId, 0, 1);
+      } else {
+        // Increment user's normal envelopes count
+        await this.envelopeService.addEnvelopes(userId, 1, 0);
+      }
     }
 
     // Empty the cart

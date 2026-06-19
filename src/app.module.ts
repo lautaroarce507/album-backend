@@ -6,6 +6,8 @@ import { UserModule } from './user/user.module';
 import { ShopModule } from './shop/shop.module';
 import { AlbumModule } from './album/album.module';
 import { CartModule } from './cart/cart.module';
+import { EnvelopeModule } from './envelope/envelope.module';
+import { TradeModule } from './trade/trade.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { CartModule } from './cart/cart.module';
     ShopModule,
     AlbumModule,
     CartModule,
+    EnvelopeModule,
+    TradeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

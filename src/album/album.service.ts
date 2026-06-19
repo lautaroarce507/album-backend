@@ -54,37 +54,58 @@ export class AlbumService {
     return album;
   }
 
-  async unlockFigure(userId: number, figureName: string, isGolden = false): Promise<Figure> {
+  async unlockFigure(userId: number, figureName: string, isGolden = false): Promise<{ figure: Figure; isDuplicate: boolean }> {
     const album = await this.findOrCreateAlbum(userId);
-    let figure = await this.figureRepository.findOne({
-      where: { name: figureName, album: { id: album.id } },
+    const existing = await this.figureRepository.findOne({
+      where: { name: figureName, album: { id: album.id }, isDuplicate: false },
     });
 
-    if (!figure) {
-      figure = this.figureRepository.create({
+    if (!existing) {
+      // Primera vez que se obtiene: guardar como obtenida
+      const figure = this.figureRepository.create({
         name: figureName,
         obtained: true,
         isGolden: isGolden,
+        isDuplicate: false,
         album: album,
       });
+      const saved = await this.figureRepository.save(figure);
+      return { figure: saved, isDuplicate: false };
     } else {
-      figure.obtained = true;
-      if (isGolden) {
-        figure.isGolden = true;
+      // Ya se tiene: si el nuevo cromo es dorado y el existente no, lo mejoramos a dorado!
+      if (isGolden && !existing.isGolden) {
+        existing.isGolden = true;
+        await this.figureRepository.save(existing);
       }
-    }
 
-    return this.figureRepository.save(figure);
+      // guardar como duplicado en la pila
+      const duplicate = this.figureRepository.create({
+        name: figureName,
+        obtained: true,
+        isGolden: isGolden,
+        isDuplicate: true,
+        album: album,
+      });
+      const saved = await this.figureRepository.save(duplicate);
+      return { figure: saved, isDuplicate: true };
+    }
   }
 
-  async unlockRandomFigures(userId: number, count: number, isGolden = false): Promise<Figure[]> {
-    const figuresUnlocked: Figure[] = [];
+  async unlockRandomFigures(userId: number, count: number, isGolden = false): Promise<{ figure: Figure; isDuplicate: boolean }[]> {
+    const results: { figure: Figure; isDuplicate: boolean }[] = [];
     for (let i = 0; i < count; i++) {
       const randomIndex = Math.floor(Math.random() * ALL_STICKERS.length);
       const stickerName = ALL_STICKERS[randomIndex];
-      const fig = await this.unlockFigure(userId, stickerName, isGolden);
-      figuresUnlocked.push(fig);
+      const result = await this.unlockFigure(userId, stickerName, isGolden);
+      results.push(result);
     }
-    return figuresUnlocked;
+    return results;
+  }
+
+  async getDuplicates(userId: number): Promise<Figure[]> {
+    const album = await this.findOrCreateAlbum(userId);
+    return this.figureRepository.find({
+      where: { album: { id: album.id }, isDuplicate: true },
+    });
   }
 }

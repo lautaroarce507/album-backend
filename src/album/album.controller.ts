@@ -12,11 +12,16 @@ export class AlbumController {
     return this.albumService.findOrCreateAlbum(userId);
   }
 
+  @Get('duplicates')
+  getDuplicates(@Param('userId', ParseIntPipe) userId: number): Promise<Figure[]> {
+    return this.albumService.getDuplicates(userId);
+  }
+
   @Post('unlock')
   unlockFigure(
     @Param('userId', ParseIntPipe) userId: number,
     @Body('name') figureName: string,
-  ): Promise<Figure> {
+  ): Promise<{ figure: Figure; isDuplicate: boolean }> {
     return this.albumService.unlockFigure(userId, figureName);
   }
 }
