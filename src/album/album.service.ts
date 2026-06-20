@@ -10,14 +10,17 @@ const ALL_STICKERS = [
   '/assets/dibu.png', '/assets/molina.png', '/assets/romero.png', '/assets/otamendi.png',
   '/assets/mac%20allister.png', '/assets/de%20paul.png', '/assets/enzo.png', '/assets/messi.png',
   '/assets/julian.png', '/assets/lautaro.png', '/assets/simeone.png', '/assets/scaloni.png',
+  '/assets/3.png', '/assets/equipo_argentina.jpg',
   // Paises Bajos
   '/assets/van%20dijk.png', '/assets/dumfries.png', '/assets/de%20jong.png', '/assets/simons.png',
   '/assets/gakpo.png', '/assets/depay.png', '/assets/koeman.png', '/assets/reijnders.png',
   '/assets/van%20de%20ven.png', '/assets/verbruggen.png', '/assets/gravenberch.png', '/assets/malen.png',
+  '/assets/escudo_paises_bajos.png', '/assets/equipo_paises_bajos.jpg',
   // Mexico
   '/assets/lozano.png', '/assets/jimenez.png', '/assets/gallardo.png', '/assets/montes.png',
   '/assets/vasquez.png', '/assets/vega.png', '/assets/reyes.png', '/assets/alvarado.png',
-  '/assets/malagon.png', '/assets/ruiz.png', '/assets/edison.png', '/assets/aguirre.png'
+  '/assets/malagon.png', '/assets/ruiz.png', '/assets/edison.png', '/assets/aguirre.png',
+  '/assets/escudo_mexico.png', '/assets/equipo_mexico.jpg'
 ];
 
 @Injectable()
