@@ -84,4 +84,28 @@ export class EnvelopeService {
       return this.albumService.unlockRandomFigures(userId, 1, true);
     }
   }
+
+  async openAllEnvelopes(userId: number): Promise<any[]> {
+    const envelope = await this.findOrCreateEnvelope(userId);
+    const { normalCount, goldenCount } = envelope;
+
+    if (normalCount <= 0 && goldenCount <= 0) {
+      throw new BadRequestException('No tienes sobres para abrir');
+    }
+
+    envelope.normalCount = 0;
+    envelope.goldenCount = 0;
+    await this.envelopeRepository.save(envelope);
+
+    let results: any[] = [];
+    if (normalCount > 0) {
+      const normalResults = await this.albumService.unlockRandomFigures(userId, normalCount * 7, false);
+      results = results.concat(normalResults);
+    }
+    if (goldenCount > 0) {
+      const goldenResults = await this.albumService.unlockRandomFigures(userId, goldenCount * 1, true);
+      results = results.concat(goldenResults);
+    }
+    return results;
+  }
 }

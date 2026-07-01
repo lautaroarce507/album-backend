@@ -23,4 +23,9 @@ export class EnvelopeController {
   ): Promise<any[]> {
     return this.envelopeService.openEnvelope(userId, type);
   }
+
+  @Post('open-all')
+  openAllEnvelopes(@Param('userId', ParseIntPipe) userId: number): Promise<any[]> {
+    return this.envelopeService.openAllEnvelopes(userId);
+  }
 }

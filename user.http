@@ -25,6 +25,6 @@ Content-Type: application/json
 }
 
 ### Eliminar un usuario
-DELETE http://localhost:3000/users/18
+DELETE http://localhost:3000/users/40
 Content-Type: application/json
 

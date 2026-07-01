@@ -13,6 +13,7 @@ import { TradeModule } from './trade/trade.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
+      //url: "postgresql://postgres.udcsygmzjxsyctytoqnb:lauchaarce15@aws-1-us-east-1.pooler.supabase.com:5432/postgres",
       host: 'localhost',
       port: 5432,
       username: 'postgres',
